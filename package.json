@@ -1,6 +1,10 @@
 {
   "name": "longbits",
+<<<<<<< HEAD
   "version": "1.0.0",
+=======
+  "version": "0.0.0",
+>>>>>>> deps: update byte-access
   "description": "BigInts represented as hi/low bit values",
   "license": "Apache-2.0 OR MIT",
   "homepage": "https://github.com/achingbrain/longbits#readme",
@@ -135,7 +139,7 @@
     "release": "aegir release"
   },
   "dependencies": {
-    "byte-access": "^0.0.0",
+    "byte-access": "^1.0.0",
     "uint8arraylist": "^1.5.2"
   },
   "devDependencies": {
