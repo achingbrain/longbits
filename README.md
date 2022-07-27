@@ -1,9 +1,9 @@
 # longbits <!-- omit in toc -->
 
 [![codecov](https://img.shields.io/codecov/c/github/achingbrain/longbits.svg?style=flat-square)](https://codecov.io/gh/achingbrain/longbits)
-[![CI](https://img.shields.io/github/workflow/status/libp2p/js-libp2p-interfaces/test%20&%20maybe%20release/master?style=flat-square)](https://github.com/achingbrain/longbits/actions/workflows/js-test-and-release.yml)
+[![CI](https://img.shields.io/github/workflow/status/achingbrain/longbits/test%20&%20maybe%20release/master?style=flat-square)](https://github.com/achingbrain/longbits/actions/workflows/js-test-and-release.yml)
 
-> BigInts represented as hi/low bit vales
+> BigInts represented as hi/low bit values
 
 ## Table of contents <!-- omit in toc -->
 

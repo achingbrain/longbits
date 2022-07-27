@@ -1,5 +1,5 @@
 import type { Uint8ArrayList } from 'uint8arraylist'
-import accessor from 'uint8arraylist-accessor'
+import accessor from 'byte-access'
 
 const TWO_32 = 4294967296
 
