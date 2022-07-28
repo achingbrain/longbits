@@ -1,6 +1,6 @@
 {
   "name": "longbits",
-  "version": "0.0.0",
+  "version": "1.0.1",
   "description": "BigInts represented as hi/low bit values",
   "license": "Apache-2.0 OR MIT",
   "homepage": "https://github.com/achingbrain/longbits#readme",
