@@ -1,10 +1,6 @@
 {
   "name": "longbits",
-<<<<<<< HEAD
-  "version": "1.0.0",
-=======
   "version": "0.0.0",
->>>>>>> deps: update byte-access
   "description": "BigInts represented as hi/low bit values",
   "license": "Apache-2.0 OR MIT",
   "homepage": "https://github.com/achingbrain/longbits#readme",
@@ -66,15 +62,15 @@
               "release": "patch"
             },
             {
-              "type": "chore",
-              "release": "patch"
-            },
-            {
               "type": "docs",
               "release": "patch"
             },
             {
               "type": "test",
+              "release": "patch"
+            },
+            {
+              "type": "deps",
               "release": "patch"
             },
             {
@@ -129,7 +125,7 @@
     "lint": "aegir lint",
     "dep-check": "aegir dep-check",
     "build": "aegir build",
-    "test": "aegir test -t node",
+    "test": "aegir test",
     "test:node": "aegir test -t node --cov",
     "test:chrome": "aegir test -t browser --cov",
     "test:chrome-webworker": "aegir test -t webworker",
@@ -139,10 +135,10 @@
     "release": "aegir release"
   },
   "dependencies": {
-    "byte-access": "^1.0.0",
-    "uint8arraylist": "^1.5.2"
+    "byte-access": "^1.0.1",
+    "uint8arraylist": "^2.0.0"
   },
   "devDependencies": {
-    "aegir": "^37.4.6"
+    "aegir": "^37.4.7"
   }
 }
