@@ -64,4 +64,14 @@ describe('longbits', () => {
 
     expect(bits.toNumber()).to.equal(val)
   })
+
+  it('should throw on incomplete byte array', () => {
+    const val = 6547656755453442n
+    const bits = LongBits.fromBigInt(val)
+    const bytes = new Uint8Array(8)
+    bits.toBytes(bytes)
+
+    expect(() => LongBits.fromBytes(bytes.slice(0, 2)))
+      .to.throw(RangeError)
+  })
 })

@@ -42,6 +42,9 @@ export class LongBits {
     return Number(this.toBigInt(unsigned))
   }
 
+  /**
+   * ZigZag decode a LongBits object
+   */
   zzDecode () {
     const mask = -(this.lo & 1)
     const lo = ((this.lo >>> 1 | this.hi << 31) ^ mask) >>> 0
@@ -50,6 +53,9 @@ export class LongBits {
     return new LongBits(hi, lo)
   }
 
+  /**
+   * ZigZag encode a LongBits object
+   */
   zzEncode () {
     const mask = this.hi >> 31
     const hi = ((this.hi << 1 | this.lo >>> 31) ^ mask) >>> 0
@@ -58,6 +64,9 @@ export class LongBits {
     return new LongBits(hi, lo)
   }
 
+  /**
+   * Encode a LongBits object as a varint byte array
+   */
   toBytes (buf: Uint8ArrayList | Uint8Array, offset = 0) {
     const access = accessor(buf)
 
@@ -75,6 +84,9 @@ export class LongBits {
     access.set(offset++, this.lo)
   }
 
+  /**
+   * Parse a LongBits object from a BigInt
+   */
   static fromBigInt (value: bigint) {
     if (value === 0n) {
       return new LongBits()
@@ -105,6 +117,9 @@ export class LongBits {
     return new LongBits(hi, lo)
   }
 
+  /**
+   * Parse a LongBits object from a Number
+   */
   static fromNumber (value: number) {
     if (value === 0) {
       return new LongBits()
@@ -135,8 +150,16 @@ export class LongBits {
     return new LongBits(hi, lo)
   }
 
+  /**
+   * Parse a LongBits object from a varint byte array
+   */
   static fromBytes (buf: Uint8ArrayList | Uint8Array, offset: number = 0) {
     const access = accessor(buf)
+
+    // if the MSB of the final byte is not 0 we don't have all the bytes
+    if (access.get(buf.byteLength - 1) >> 7 === 1) {
+      throw RangeError('incomplete varint')
+    }
 
     // tends to deopt with local vars for octet etc.
     const bits = new LongBits()
