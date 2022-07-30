@@ -12,6 +12,9 @@ export class LongBits {
     this.lo = lo
   }
 
+  /**
+   * Returns these hi/lo bits as a BigInt
+   */
   toBigInt (unsigned?: boolean): bigint {
     if (unsigned === true) {
       return BigInt(this.lo >>> 0) + (BigInt(this.hi >>> 0) << 32n)
@@ -31,6 +34,17 @@ export class LongBits {
     return BigInt(this.lo >>> 0) + (BigInt(this.hi >>> 0) << 32n)
   }
 
+  /**
+   * Returns these hi/lo bits as a Number - this may overflow, toBigInt
+   * should be preferred
+   */
+  toNumber (unsigned?: boolean): number {
+    return Number(this.toBigInt(unsigned))
+  }
+
+  /**
+   * ZigZag decode a LongBits object
+   */
   zzDecode () {
     const mask = -(this.lo & 1)
     const lo = ((this.lo >>> 1 | this.hi << 31) ^ mask) >>> 0
@@ -39,6 +53,9 @@ export class LongBits {
     return new LongBits(hi, lo)
   }
 
+  /**
+   * ZigZag encode a LongBits object
+   */
   zzEncode () {
     const mask = this.hi >> 31
     const hi = ((this.hi << 1 | this.lo >>> 31) ^ mask) >>> 0
@@ -47,6 +64,9 @@ export class LongBits {
     return new LongBits(hi, lo)
   }
 
+  /**
+   * Encode a LongBits object as a varint byte array
+   */
   toBytes (buf: Uint8ArrayList | Uint8Array, offset = 0) {
     const access = accessor(buf)
 
@@ -64,6 +84,9 @@ export class LongBits {
     access.set(offset++, this.lo)
   }
 
+  /**
+   * Parse a LongBits object from a BigInt
+   */
   static fromBigInt (value: bigint) {
     if (value === 0n) {
       return new LongBits()
@@ -94,6 +117,9 @@ export class LongBits {
     return new LongBits(hi, lo)
   }
 
+  /**
+   * Parse a LongBits object from a Number
+   */
   static fromNumber (value: number) {
     if (value === 0) {
       return new LongBits()
@@ -124,6 +150,9 @@ export class LongBits {
     return new LongBits(hi, lo)
   }
 
+  /**
+   * Parse a LongBits object from a varint byte array
+   */
   static fromBytes (buf: Uint8ArrayList | Uint8Array, offset: number = 0) {
     const access = accessor(buf)
 
@@ -135,35 +164,47 @@ export class LongBits {
       for (; i < 4; ++i) {
         // 1st..4th
         bits.lo = (bits.lo | (access.get(offset) & 127) << i * 7) >>> 0
-        if (access.get(offset++) < 128) { return bits }
+
+        if (access.get(offset++) < 128) {
+          return bits
+        }
       }
+
       // 5th
       bits.lo = (bits.lo | (access.get(offset) & 127) << 28) >>> 0
       bits.hi = (bits.hi | (access.get(offset) & 127) >> 4) >>> 0
-      if (access.get(offset++) < 128) { return bits }
+
+      if (access.get(offset++) < 128) {
+        return bits
+      }
+
       i = 0
     } else {
-      for (; i < 3; ++i) {
+      for (; i < 4; ++i) {
         /* istanbul ignore if */
         if (offset >= buf.length) {
           throw RangeError(`index out of range: ${offset} > ${buf.length}`)
         }
 
-        // 1st..3th
+        // 1st..4th
         bits.lo = (bits.lo | (access.get(offset) & 127) << i * 7) >>> 0
-        if (access.get(offset++) < 128) { return bits }
+
+        if (access.get(offset++) < 128) {
+          return bits
+        }
       }
-      // 4th
-      bits.lo = (bits.lo | (access.get(offset++) & 127) << i * 7) >>> 0
-      return bits
     }
+
     if (buf.length - offset > 4) { // fast route (hi)
       for (; i < 5; ++i) {
         // 6th..10th
         bits.hi = (bits.hi | (access.get(offset) & 127) << i * 7 + 3) >>> 0
-        if (access.get(offset++) < 128) { return bits }
+
+        if (access.get(offset++) < 128) {
+          return bits
+        }
       }
-    } else {
+    } else if (offset < buf.byteLength) {
       for (; i < 5; ++i) {
         /* istanbul ignore if */
         if (offset >= buf.length) {
@@ -172,6 +213,7 @@ export class LongBits {
 
         // 6th..10th
         bits.hi = (bits.hi | (access.get(offset) & 127) << i * 7 + 3) >>> 0
+
         if (access.get(offset++) < 128) {
           return bits
         }
@@ -179,6 +221,6 @@ export class LongBits {
     }
 
     /* istanbul ignore next */
-    throw Error('invalid varint encoding')
+    throw RangeError('invalid varint encoding')
   }
 }
