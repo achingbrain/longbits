@@ -39,22 +39,7 @@ export class LongBits {
    * should be preferred
    */
   toNumber (unsigned?: boolean): number {
-    if (unsigned === true) {
-      return (this.lo >>> 0) + (this.hi >>> 0) << 32
-    }
-
-    if ((this.hi >>> 31) !== 0) {
-      const lo = ~this.lo + 1 >>> 0
-      let hi = ~this.hi >>> 0
-
-      if (lo === 0) {
-        hi = hi + 1 >>> 0
-      }
-
-      return -(lo + (hi << 32))
-    }
-
-    return (this.lo >>> 0) + ((this.hi >>> 0) << 32)
+    return Number(this.toBigInt(unsigned))
   }
 
   zzDecode () {
