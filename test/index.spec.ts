@@ -51,10 +51,17 @@ describe('longbits', () => {
     expect(bits.zzDecode().toBigInt()).to.equal(val)
   })
 
-  it('should round trip numbee', () => {
+  it('should round trip number', () => {
     const val = 65476
     const bits = LongBits.fromNumber(val)
 
     expect(bits.toBigInt()).to.equal(BigInt(val))
+  })
+
+  it('should round trip number as number', () => {
+    const val = 65476
+    const bits = LongBits.fromNumber(val)
+
+    expect(bits.toNumber()).to.equal(val)
   })
 })

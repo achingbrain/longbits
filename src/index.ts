@@ -12,6 +12,9 @@ export class LongBits {
     this.lo = lo
   }
 
+  /**
+   * Returns these hi/lo bits as a BigInt
+   */
   toBigInt (unsigned?: boolean): bigint {
     if (unsigned === true) {
       return BigInt(this.lo >>> 0) + (BigInt(this.hi >>> 0) << 32n)
@@ -29,6 +32,29 @@ export class LongBits {
     }
 
     return BigInt(this.lo >>> 0) + (BigInt(this.hi >>> 0) << 32n)
+  }
+
+  /**
+   * Returns these hi/lo bits as a Number - this may overflow, toBigInt
+   * should be preferred
+   */
+  toNumber (unsigned?: boolean): number {
+    if (unsigned === true) {
+      return (this.lo >>> 0) + (this.hi >>> 0) << 32
+    }
+
+    if ((this.hi >>> 31) !== 0) {
+      const lo = ~this.lo + 1 >>> 0
+      let hi = ~this.hi >>> 0
+
+      if (lo === 0) {
+        hi = hi + 1 >>> 0
+      }
+
+      return -(lo + (hi << 32))
+    }
+
+    return (this.lo >>> 0) + ((this.hi >>> 0) << 32)
   }
 
   zzDecode () {
@@ -179,6 +205,6 @@ export class LongBits {
     }
 
     /* istanbul ignore next */
-    throw Error('invalid varint encoding')
+    throw RangeError('invalid varint encoding')
   }
 }
