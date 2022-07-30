@@ -114,7 +114,7 @@ describe('longbits', () => {
     const buf = new Uint8Array(4)
     LongBits.fromNumber(183950794).toBytes(buf)
 
-    expect(buf).to.equalBytes(Uint8Array.from([ 202, 187, 219, 87 ]))
+    expect(buf).to.equalBytes(Uint8Array.from([202, 187, 219, 87]))
 
     expect(LongBits.fromBytes(buf).toNumber(true)).to.equal(183950794)
   })
