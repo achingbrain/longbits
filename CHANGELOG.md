@@ -1,3 +1,10 @@
+## [1.1.0](https://github.com/achingbrain/longbits/compare/v1.0.1...v1.1.0) (2022-07-30)
+
+
+### Features
+
+* add toNumber ([#3](https://github.com/achingbrain/longbits/issues/3)) ([cf8ecb0](https://github.com/achingbrain/longbits/commit/cf8ecb0511e793f29ba4481387209ba3917378de))
+
 ## [1.0.1](https://github.com/achingbrain/longbits/compare/v1.0.0...v1.0.1) (2022-07-28)
 
 
