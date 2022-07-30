@@ -156,11 +156,6 @@ export class LongBits {
   static fromBytes (buf: Uint8ArrayList | Uint8Array, offset: number = 0) {
     const access = accessor(buf)
 
-    // if the MSB of the final byte is not 0 we don't have all the bytes
-    if (access.get(buf.byteLength - 1) >> 7 === 1) {
-      throw RangeError('incomplete varint')
-    }
-
     // tends to deopt with local vars for octet etc.
     const bits = new LongBits()
     let i = 0
@@ -169,35 +164,47 @@ export class LongBits {
       for (; i < 4; ++i) {
         // 1st..4th
         bits.lo = (bits.lo | (access.get(offset) & 127) << i * 7) >>> 0
-        if (access.get(offset++) < 128) { return bits }
+
+        if (access.get(offset++) < 128) {
+          return bits
+        }
       }
+
       // 5th
       bits.lo = (bits.lo | (access.get(offset) & 127) << 28) >>> 0
       bits.hi = (bits.hi | (access.get(offset) & 127) >> 4) >>> 0
-      if (access.get(offset++) < 128) { return bits }
+
+      if (access.get(offset++) < 128) {
+        return bits
+      }
+
       i = 0
     } else {
-      for (; i < 3; ++i) {
+      for (; i < 4; ++i) {
         /* istanbul ignore if */
         if (offset >= buf.length) {
           throw RangeError(`index out of range: ${offset} > ${buf.length}`)
         }
 
-        // 1st..3th
+        // 1st..4th
         bits.lo = (bits.lo | (access.get(offset) & 127) << i * 7) >>> 0
-        if (access.get(offset++) < 128) { return bits }
+
+        if (access.get(offset++) < 128) {
+          return bits
+        }
       }
-      // 4th
-      bits.lo = (bits.lo | (access.get(offset++) & 127) << i * 7) >>> 0
-      return bits
     }
+
     if (buf.length - offset > 4) { // fast route (hi)
       for (; i < 5; ++i) {
         // 6th..10th
         bits.hi = (bits.hi | (access.get(offset) & 127) << i * 7 + 3) >>> 0
-        if (access.get(offset++) < 128) { return bits }
+
+        if (access.get(offset++) < 128) {
+          return bits
+        }
       }
-    } else {
+    } else if (offset < buf.byteLength) {
       for (; i < 5; ++i) {
         /* istanbul ignore if */
         if (offset >= buf.length) {
@@ -206,6 +213,7 @@ export class LongBits {
 
         // 6th..10th
         bits.hi = (bits.hi | (access.get(offset) & 127) << i * 7 + 3) >>> 0
+
         if (access.get(offset++) < 128) {
           return bits
         }
