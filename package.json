@@ -139,6 +139,6 @@
     "uint8arraylist": "^2.0.0"
   },
   "devDependencies": {
-    "aegir": "^37.4.7"
+    "aegir": "^38.1.7"
   }
 }
